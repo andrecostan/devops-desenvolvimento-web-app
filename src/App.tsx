@@ -1,19 +1,20 @@
 /* eslint-disable linebreak-style */
 import { BrowserRouter } from 'react-router-dom';
-import AppRoutes  from './routes';
-import { ThemeProvider } from '@emotion/react';
-import { LigthTheme } from './shared/layouts';
+import { AppRoutes } from './routes';
 import { MenuLateral } from './shared/components';
+import { AppThemeProvider, DrawerProvider } from './shared/contexts';
 
 function App() {
-  return (
-    <ThemeProvider theme={LigthTheme}>
-      <BrowserRouter>
-        <MenuLateral>
-          <AppRoutes />
-        </MenuLateral>
-      </BrowserRouter>
-    </ThemeProvider>
+  return (    
+    <AppThemeProvider>
+      <DrawerProvider>
+        <BrowserRouter>
+          <MenuLateral>
+            <AppRoutes />
+          </MenuLateral>
+        </BrowserRouter>
+      </DrawerProvider>
+    </AppThemeProvider>
   );
 }
 

@@ -93,10 +93,10 @@ export const ListagemDeContas: React.FC = () => {
               <TableRow key={row.id}>
                 <TableCell>
                   <IconButton size="small" onClick={() => handleDelete(row.id)}>
-                    <Icon>delete</Icon>
+                    <Icon className="material-symbols-outlined">delete</Icon>
                   </IconButton>
                   <IconButton size="small" onClick={() => navigate(`/contas/detalhe/${row.id}`)}>
-                    <Icon>edit</Icon>
+                    <Icon className="material-symbols-outlined">edit</Icon>
                   </IconButton>
                 </TableCell>
                 <TableCell>{row.cpf}</TableCell>

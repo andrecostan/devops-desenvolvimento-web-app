@@ -15,22 +15,20 @@ interface IFormData {
     cpf: string;
     titulo: string;
     valor: number;
-    valorAtualizadoComJuros: number;
+    //valorAtualizadoComJuros: number;
     vencimento: Date;
-    contraAtrasada: boolean;
+    //contaAtrasada: boolean;
     taxaDeJurosPorDiasDeAtraso: number;
-    dataPagamento: Date;
+    //dataPagamento: Date;
 }
 const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
   id: yup.number().required(),
   cpf: yup.string().required(),
   titulo: yup.string().required(),
   valor: yup.number().required(),
-  valorAtualizadoComJuros: yup.number().required(),
+  //valorAtualizadoComJuros: yup.number().required(),
   vencimento: yup.date().required(),
-  contraAtrasada: yup.boolean().required(),
   taxaDeJurosPorDiasDeAtraso: yup.number().required(),
-  dataPagamento: yup.date().required(),
 });
 
 export const DetalheDeContas: React.FC = () => {
@@ -65,7 +63,7 @@ export const DetalheDeContas: React.FC = () => {
         valor: 0,
         valorAtualizadoComJuros: 0,
         vencimento: undefined,
-        contraAtrasada: false,
+        contaAtrasada: false,
         taxaDeJurosPorDiasDeAtraso: 0,
         dataPagamento: undefined,
       });
@@ -158,7 +156,7 @@ export const DetalheDeContas: React.FC = () => {
         />
       }
     >
-      <VForm ref={formRef} onSubmit={handleSave}>
+      <VForm ref={formRef} onSubmit={handleSave} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
         <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
 
           <Grid container direction="column" padding={2} spacing={2}>
@@ -206,17 +204,7 @@ export const DetalheDeContas: React.FC = () => {
                 />
               </Grid>
             </Grid>
-
-            <Grid container item direction="row" spacing={2}>
-              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <VTextField
-                  fullWidth
-                  name='valorAtualizadoComJuros'
-                  label='Valor Atrasaso com Juros'
-                  disabled={isLoading}
-                />
-              </Grid>
-            </Grid>
+            
                 
             <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
@@ -229,16 +217,16 @@ export const DetalheDeContas: React.FC = () => {
               </Grid>
             </Grid>
 
-            <Grid container item direction="row" spacing={2}>
+            {/* <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                 <VTextField
                   fullWidth
-                  name='contraAtrasada'
+                  name='contaAtrasada'
                   label='Conta atrasada'
                   disabled={isLoading}
                 />
               </Grid>
-            </Grid>
+            </Grid> */}
 
             <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
@@ -251,7 +239,7 @@ export const DetalheDeContas: React.FC = () => {
               </Grid>
             </Grid>
             
-            <Grid container item direction="row" spacing={2}>
+            {/* <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                 <VTextField
                   fullWidth
@@ -260,7 +248,7 @@ export const DetalheDeContas: React.FC = () => {
                   disabled={isLoading}
                 />
               </Grid>
-            </Grid>
+            </Grid> */}
             
 
           </Grid>

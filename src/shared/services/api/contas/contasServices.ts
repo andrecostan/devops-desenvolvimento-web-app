@@ -16,7 +16,7 @@ export interface IDetalheConta {
     valor: number;
     valorAtualizadoComJuros: number,
     vencimento: Date;
-    contraAtrasada: boolean;
+    contaAtrasada: boolean;
     taxaDeJurosPorDiasDeAtraso: number;
     dataPagamento: Date
 }
@@ -27,7 +27,7 @@ export interface IcreateConta{
     titulo: string;
     valor: number;
     vencimento: Date;
-    contraAtrasada: boolean;
+    //contaAtrasada: boolean;
     taxaDeJurosPorDiasDeAtraso: number;
 }
 
@@ -39,10 +39,10 @@ type TContaComTotalCount = {
 const getAll = async (): Promise<TContaComTotalCount | Error> => {
   try {
     const urlRelativa = '/contas';
-    let teste = Api.getUri + urlRelativa;
     const { data, headers } = await Api.get(urlRelativa);
 
     if (data) {
+      console.log(data);
       return {
         data,
         totalCount: Number(headers['x-total-count'] || Environment.LIMITE_DE_LINHAS),

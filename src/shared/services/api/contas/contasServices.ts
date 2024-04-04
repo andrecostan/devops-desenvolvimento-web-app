@@ -1,12 +1,19 @@
 import { Environment } from '../../../environment';
 import { Api } from '../axios-config';
+import { format } from 'date-fns';
+
 
 
 export interface IListagemConta {
-    id: number;
-    cpf: string;
-    titulo: string;
-    valor: number;  
+  id: number;
+  cpf: string;
+  titulo: string;
+  valor: number;
+  valorAtualizadoComJuros: number,
+  vencimento: string;
+  contaAtrasada: boolean;
+  taxaDeJurosPorDiasDeAtraso: number;
+  dataPagamento: string;  
 }
 
 export interface IDetalheConta {
@@ -18,7 +25,7 @@ export interface IDetalheConta {
     vencimento: Date;
     contaAtrasada: boolean;
     taxaDeJurosPorDiasDeAtraso: number;
-    dataPagamento: Date
+    dataPagamento: Date;
 }
 
 export interface IcreateConta{
@@ -29,6 +36,10 @@ export interface IcreateConta{
     vencimento: Date;
     //contaAtrasada: boolean;
     taxaDeJurosPorDiasDeAtraso: number;
+}
+
+export interface IPagamentoContaConta{
+  dataPagamento: string;
 }
 
 type TContaComTotalCount = {
@@ -104,12 +115,14 @@ const deleteById = async (id: number): Promise<void | Error> => {
   }
 };
 
-const atualizarPagamento = async (id: number, dataPagamento: Date): Promise<void | Error> => {
+const atualizarPagamento = async (id: number, dataPagamento: IPagamentoContaConta): Promise<void | Error> => {
   try {
-    await Api.patch('/contas/${id}', dataPagamento);
+    const currentDate = new Date();
+    const formattedDate = format(currentDate, 'yyyy-MM-dd');    
+    await Api.patch(`/contas/${id}`, dataPagamento);
   } catch (error) {
     console.error(error);
-    return new Error((error as { message: string }).message || 'Erro ao apagar o registro.');
+    return new Error((error as { message: string }).message || 'Erro ao lançar data de pagamento.');
   }
 };
 

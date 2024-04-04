@@ -3,7 +3,7 @@ import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { ContasService } from '../../shared/services/api/contas/contasServices';
+import { ContasService, IcreateConta } from '../../shared/services/api/contas/contasServices';
 import { VTextField, VForm, useVForm, IVFormErrors } from '../../shared/forms';
 //import { AutoCompleteCidade } from './components/AutoCompleteCidade';
 import { FerramentasDeDetalhe } from '../../shared/components';
@@ -21,15 +21,15 @@ interface IFormData {
     taxaDeJurosPorDiasDeAtraso: number;
     //dataPagamento: Date;
 }
-const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-  id: yup.number().required(),
-  cpf: yup.string().required(),
-  titulo: yup.string().required(),
-  valor: yup.number().required(),
-  //valorAtualizadoComJuros: yup.number().required(),
-  vencimento: yup.date().required(),
-  taxaDeJurosPorDiasDeAtraso: yup.number().required(),
-});
+// const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
+//   id: yup.number().required(),
+//   cpf: yup.string().required(),
+//   titulo: yup.string().required(),
+//   valor: yup.number().required(),
+//   //valorAtualizadoComJuros: yup.number().required(),
+//   vencimento: yup.date().required(),
+//   taxaDeJurosPorDiasDeAtraso: yup.number().required(),
+// });
 
 export const DetalheDeContas: React.FC = () => {
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
@@ -73,54 +73,61 @@ export const DetalheDeContas: React.FC = () => {
 
   const handleSave = (dados: IFormData) => {
 
-    formValidationSchema.
-      validate(dados, { abortEarly: false })
-      .then((dadosValidados) => {
-        setIsLoading(true);
+    console.log('handlesave');
 
-        if (id === 'nova') {
-          ContasService
-            .create(dadosValidados)
-            .then((result) => {
-              setIsLoading(false);
+    setIsLoading(true);
+    console.log('handlesave');
+    if (id === 'nova') {
+      ContasService
+        .create(dados)
+        .then((result) => {
+          setIsLoading(false);
 
-              if (result instanceof Error) {
-                alert(result.message);
-              } else {
-                if (isSaveAndClose()) {
-                  navigate('/contas');
-                } else {
-                  navigate(`/contas/detalhe/${result}`);
-                }
-              }
-            });
-        } else {
-          ContasService
-            .updateById(Number(id), {  ...dadosValidados })
-            .then((result) => {
-              setIsLoading(false);
-
-              if (result instanceof Error) {
-                alert(result.message);
-              } else {
-                if (isSaveAndClose()) {
-                  navigate('/Contas');
-                }
-              }
-            });
-        }
-      })
-      .catch((errors: yup.ValidationError) => {
-        const validationErrors: IVFormErrors = {};
-
-        errors.inner.forEach(error => {
-          if (!error.path) return;
-
-          validationErrors[error.path] = error.message;
+          if (result instanceof Error) {
+            alert(result.message);
+          } else {
+            if (isSaveAndClose()) {
+              navigate('/contas');
+            } else {
+              navigate(`/contas/detalhe/${result}`);
+            }
+          }
         });
+    } else {
+      ContasService
+        .updateById(Number(id), {
+          ...dados,
+          id: 0
+        })
+        .then((result) => {
+          setIsLoading(false);
 
-        formRef.current?.setErrors(validationErrors);
-      });
+          if (result instanceof Error) {
+            alert(result.message);
+          } else {
+            if (isSaveAndClose()) {
+              navigate('/Contas');
+            }
+          }
+        });
+    }
+
+    // formValidationSchema.
+    //   validate(dados, { abortEarly: false })
+    //   .then((dadosValidados: Omit<IcreateConta, 'id'>) => {
+        
+    //   })
+    //   .catch((errors: yup.ValidationError) => {
+    //     const validationErrors: IVFormErrors = {};
+
+    //     errors.inner.forEach(error => {
+    //       if (!error.path) return;
+
+    //       validationErrors[error.path] = error.message;
+    //     });
+
+    //     formRef.current?.setErrors(validationErrors);
+    //   });
   };
 
   const handleDelete = (id: number) => {

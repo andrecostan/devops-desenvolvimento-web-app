@@ -2,17 +2,20 @@ import { useEffect, useMemo, useState } from 'react';
 import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { ContasService, IListagemConta } from '../../shared/services/api/contas/contasServices';
+import { ContasService, IListagemConta, IPagamentoContaConta } from '../../shared/services/api/contas/contasServices';
 import { FerramentasDeListagem } from '../../shared/components';
 import { LayoutBaseDePagina } from '../../shared/layouts';
 import { useDebounce } from '../../shared/hooks';
 import { Environment } from '../../shared/environment';
+import { format } from 'date-fns';
 
 
 export const ListagemDeContas: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
   const navigate = useNavigate();
+
+  
 
   const [rows, setRows] = useState<IListagemConta[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,6 +67,23 @@ export const ListagemDeContas: React.FC = () => {
     }
   };
 
+  const handleUpdatePagamento = (id: number) => {
+    if (confirm('Deseja realizar pagamento?')) {
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, 'yyyy-MM-dd');
+      const pagamento: IPagamentoContaConta = { dataPagamento: formattedDate };
+      ContasService.atualizarPagamento(id, pagamento)
+        .then(result => {
+          if (result instanceof Error) {
+            alert(result.message);
+          } else {
+            
+            alert('Registro pago com sucesso!');
+          }
+        });
+    }
+  };
+
 
   return (
     <LayoutBaseDePagina
@@ -83,9 +103,15 @@ export const ListagemDeContas: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell width={100}>Ações</TableCell>
+              <TableCell>id</TableCell>
               <TableCell>Cpf</TableCell>
               <TableCell>Titulo</TableCell>
               <TableCell>Valor</TableCell>
+              <TableCell>valor Atualizado Com Juros</TableCell>
+              <TableCell>Data vencimento</TableCell>
+              <TableCell>Conta atrasada</TableCell>
+              <TableCell>Taxa de juros por dia</TableCell>
+              <TableCell>Data Pagamento</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -98,10 +124,19 @@ export const ListagemDeContas: React.FC = () => {
                   <IconButton size="small" onClick={() => navigate(`/contas/detalhe/${row.id}`)}>
                     <Icon className="material-symbols-outlined">edit</Icon>
                   </IconButton>
+                  <IconButton size="small" onClick={() => handleUpdatePagamento(row.id)}>
+                    <Icon className="material-symbols-outlined">check</Icon>
+                  </IconButton>
                 </TableCell>
+                <TableCell>{row.id}</TableCell>
                 <TableCell>{row.cpf}</TableCell>
                 <TableCell>{row.titulo}</TableCell>
                 <TableCell>{row.valor}</TableCell>
+                <TableCell>{row.valorAtualizadoComJuros}</TableCell>
+                <TableCell>{row.vencimento}</TableCell>
+                <TableCell>{row.contaAtrasada? 'SIM' : 'NÃO'}</TableCell>
+                <TableCell>{row.taxaDeJurosPorDiasDeAtraso + '%'}</TableCell>
+                <TableCell>{row.dataPagamento }</TableCell>
               </TableRow>
             ))}
           </TableBody>

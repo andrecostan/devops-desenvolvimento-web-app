@@ -1,13 +1,12 @@
-import { Button } from '@mui/material';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { useAppThemeContext, useDrawerContext } from '../shared/contexts';
+import { useDrawerContext } from '../shared/contexts';
 import { useEffect } from 'react';
-import { Dashboard } from '../pages';
+import { Dashboard, DetalheDeContas, ListagemDeContas } from '../pages';
+import { ContasService } from '../shared/services/api/contas/contasServices';
 
 export const AppRoutes = () => {
-  const { toggleDrawerOpen,setDrawerOptions } = useDrawerContext();
-  const { toggleTheme } = useAppThemeContext();
+  const { setDrawerOptions } = useDrawerContext();
 
   useEffect(() => {
     setDrawerOptions([
@@ -18,8 +17,8 @@ export const AppRoutes = () => {
       },
       {
         icon: 'star',
-        to: '/dividas',
-        label: 'Dividas',
+        to: '/contas',
+        label: 'Contas',
       }
     ]);
   },[]);
@@ -27,7 +26,8 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/pagina-inicial" element={<Dashboard/>} />
-      {/* <Route path="/pagina-inicial" element={<Button variant='contained' color='primary' onClick={toggleTheme} content='marginLeft'>Toggle Theme</Button>} /> */}
+      <Route path="/contas" element={<ListagemDeContas/>} />
+      <Route path="/contas/detalhe/:id" element={<DetalheDeContas/>} />
 
       <Route path="*" element={<Navigate to="/pagina-inicial" />} />
     </Routes>

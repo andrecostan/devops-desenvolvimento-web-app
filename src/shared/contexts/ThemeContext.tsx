@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { DarkTheme, LigthTheme } from './../themes';
+import { Css } from '@mui/icons-material';
 
 interface IThemeContextData {
   themeName: 'light' | 'dark';
@@ -35,6 +36,7 @@ export const AppThemeProvider: React.FC<IAppThemeProviderProps> = ({ children })
   return (
     <ThemeContext.Provider value={{ themeName, toggleTheme }}>
       <ThemeProvider theme={theme}>
+        <CssBaseline/>
         <Box width="100vw" height="100vh" bgcolor={theme.palette.background.default}>
           {children}
         </Box>
